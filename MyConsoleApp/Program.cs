@@ -1,27 +1,32 @@
-﻿using System.Net;
+XPLANATION START]This is a C# console application that sends a GET request to the specified URL and retrieves the response. To migrate this app from .NET 6 to .NET 8, you need to make the following changes:
 
-namespace WebRequestSample
+1. Update the namespace to match the project name.
+2. Replace the "HttpWebRequest" and "HttpWebResponse" classes with the "HttpClient" class, as these classes are deprecated in .NET 8.
+3. Replace the "StreamReader" class with the "ReadAsStringAsync" method of the "HttpContent" class to read the response stream.
+4. Use the "await" keyword when making asynchronous calls to the HttpClient methods.
+
+[EXPLANATION END]
+
+[CORRECTED FILE START]using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace MyConsoleApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             string url = "https://jsonplaceholder.typicode.com/todos/1";
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            request.ContentType = "application/json";
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (HttpClient client = new HttpClient())
             {
-                if (response.StatusCode == HttpStatusCode.OK)
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
                 {
-                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        string responseText = reader.ReadToEnd();
-                        Console.WriteLine("Response received:");
-                        Console.WriteLine(responseText);
-                    }
+                    string responseText = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("Response received:");
+                    Console.WriteLine(responseText);
                 }
                 else
                 {
