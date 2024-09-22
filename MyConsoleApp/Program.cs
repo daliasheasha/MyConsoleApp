@@ -1,4 +1,6 @@
-﻿using System.Net;
+XPLANATION START]These are the changes needed to be made and why[EXPLANATION END] [CORRECTED FILE START]using System;
+using System.IO;
+using System.Net;
 
 namespace WebRequestSample
 {
@@ -30,4 +32,6 @@ namespace WebRequestSample
             }
         }
     }
-}
+}[CORRECTED FILE END]
+
+There are no changes needed to migrate this app from .NET 6 to .NET 8. The file remains the same.
