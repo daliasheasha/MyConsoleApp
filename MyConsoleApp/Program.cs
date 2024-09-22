@@ -1,4 +1,5 @@
-﻿using System.Net;
+using System;
+using System.Net.Http;
 
 namespace WebRequestSample
 {
@@ -8,25 +9,19 @@ namespace WebRequestSample
         {
             string url = "https://jsonplaceholder.typicode.com/todos/1";
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            request.ContentType = "application/json";
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            HttpClient client = new HttpClient();
+            
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            
+            if (response.IsSuccessStatusCode)
             {
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        string responseText = reader.ReadToEnd();
-                        Console.WriteLine("Response received:");
-                        Console.WriteLine(responseText);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Error: {response.StatusCode}");
-                }
+                string responseText = response.Content.ReadAsStringAsync().Result;
+                Console.WriteLine("Response received:");
+                Console.WriteLine(responseText);
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode}");
             }
         }
     }
