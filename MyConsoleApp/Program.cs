@@ -1,27 +1,24 @@
-﻿using System.Net;
+
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace WebRequestSample
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             string url = "https://jsonplaceholder.typicode.com/todos/1";
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            request.ContentType = "application/json";
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (HttpClient client = new HttpClient())
             {
-                if (response.StatusCode == HttpStatusCode.OK)
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
                 {
-                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        string responseText = reader.ReadToEnd();
-                        Console.WriteLine("Response received:");
-                        Console.WriteLine(responseText);
-                    }
+                    string responseText = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("Response received:");
+                    Console.WriteLine(responseText);
                 }
                 else
                 {
